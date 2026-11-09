@@ -1,12 +1,10 @@
 import "server-only";
 import { drizzle } from "drizzle-orm/libsql";
+import { dbCredentials } from "./config";
 import * as schema from "./schema";
 
 export const db = drizzle({
-  connection: {
-    url: process.env.DATABASE_URL ?? "file:local.db",
-    authToken: process.env.DATABASE_AUTH_TOKEN,
-  },
+  connection: dbCredentials,
   schema,
 });
 

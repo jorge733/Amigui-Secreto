@@ -41,9 +41,15 @@ npm run db:migrate     # aplica migraciones
 
 | Variable | Descripción | Por defecto |
 |---|---|---|
-| `DATABASE_URL` | URL de la base de datos libsql (`file:local.db` o `libsql://…` de Turso) | `file:local.db` |
-| `DATABASE_AUTH_TOKEN` | Token de Turso (solo en producción) | — |
+| `TURSO_DATABASE_URL` (o `DATABASE_URL`) | URL de la base de datos libsql (`file:local.db` o `libsql://…` de Turso) | `file:local.db` |
+| `TURSO_AUTH_TOKEN` (o `DATABASE_AUTH_TOKEN`) | Token de Turso (solo en producción) | — |
 | `APP_URL` | URL pública, para construir los enlaces compartidos | se deduce de la petición |
+
+## Despliegue (Vercel + Turso)
+
+1. Importa el repositorio en Vercel.
+2. En el proyecto de Vercel, agrega la integración de **Turso** (Storage / Integrations). Crea las variables `TURSO_DATABASE_URL` y `TURSO_AUTH_TOKEN`.
+3. Vuelve a desplegar. El build (`npm run build`) aplica las migraciones a la base de datos antes de compilar, así que las tablas se crean solas.
 
 ## Estructura
 
