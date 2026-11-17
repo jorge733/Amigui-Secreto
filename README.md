@@ -48,7 +48,7 @@ npm run db:migrate     # aplica migraciones
 ## Despliegue (Vercel + Turso)
 
 1. Importa el repositorio en Vercel.
-2. En el proyecto de Vercel, agrega la integración de **Turso** (Storage / Integrations). Crea las variables `TURSO_DATABASE_URL` y `TURSO_AUTH_TOKEN`.
+2. En el proyecto de Vercel, agrega la integración de **Turso** (Storage / Integrations). Crea variables terminadas en `TURSO_DATABASE_URL` y `TURSO_AUTH_TOKEN` (con cualquier prefijo); la app las detecta sola.
 3. Vuelve a desplegar. El build (`npm run build`) aplica las migraciones a la base de datos antes de compilar, así que las tablas se crean solas.
 
 ## Estructura
