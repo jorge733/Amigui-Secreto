@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { runDraw, type ActionState } from "@/app/actions";
 import { MIN_PARTICIPANTS } from "@/lib/draw";
 import { FormMessage } from "../form-message";
+import { ShuffleIcon } from "../icons";
 
 export function DrawButton({ adminToken, count }: { adminToken: string; count: number }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
@@ -22,7 +23,12 @@ export function DrawButton({ adminToken, count }: { adminToken: string; count: n
         }
       }}
     >
-      <button type="submit" disabled={pending || missing > 0} className="btn-primary w-full py-3 text-base">
+      <button
+        type="submit"
+        disabled={pending || missing > 0}
+        className="btn-primary w-full py-4 text-base shadow-lg shadow-accent/25"
+      >
+        <ShuffleIcon size={20} className={pending ? "animate-spin" : undefined} />
         {pending ? "Sorteando…" : "Hacer el sorteo"}
       </button>
       {missing > 0 && (

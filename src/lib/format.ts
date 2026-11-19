@@ -11,3 +11,11 @@ export function formatEventDate(date: string | null) {
     timeZone: "UTC",
   }).format(parsed);
 }
+
+/** Días que faltan para la fecha (negativo si ya pasó), según el calendario local de `now`. */
+export function daysUntil(date: string | null, now = new Date()) {
+  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Date.parse(`${date}T00:00:00Z`) - today;
+  return Number.isNaN(diff) ? null : Math.round(diff / 86_400_000);
+}

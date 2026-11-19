@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { addParticipant, type ActionState } from "@/app/actions";
 import { FormMessage } from "../form-message";
+import { PlusIcon } from "../icons";
 
 export function AddParticipantForm({ adminToken }: { adminToken: string }) {
   const [state, action, pending] = useActionState<ActionState, FormData>(
@@ -27,13 +28,19 @@ export function AddParticipantForm({ adminToken }: { adminToken: string }) {
           name="name"
           required
           autoComplete="off"
-          placeholder="Nombre (o varios separados por coma)"
+          placeholder="Ana, Pedro, Lucía…"
+          aria-describedby="participant-hint"
           className="input"
         />
         <button type="submit" disabled={pending} className="btn-primary shrink-0">
-          Agregar
+          <PlusIcon size={16} />
+          <span className="hidden sm:inline">Agregar</span>
+          <span className="sr-only sm:hidden">Agregar</span>
         </button>
       </div>
+      <p id="participant-hint" className="text-xs text-muted">
+        Puedes agregar varias personas a la vez separándolas con comas.
+      </p>
       <FormMessage state={state} />
     </form>
   );

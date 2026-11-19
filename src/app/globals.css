@@ -1,24 +1,40 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafaf9;
+  --background: #fbf7f2;
   --surface: #ffffff;
-  --foreground: #1c1917;
-  --muted: #78716c;
-  --border: #e7e5e4;
-  --accent: #b4232a;
-  --accent-soft: #fbeaea;
+  --foreground: #221a17;
+  --muted: #7a6d66;
+  --border: #ece3da;
+  --accent: #c0262d;
+  --accent-strong: #9e1c22;
+  --accent-soft: #fcebe9;
+  --accent-contrast: #ffffff;
+  --pine: #1f6b4f;
+  --pine-soft: #e5f2ec;
+  --gold: #c98a1b;
+  --gold-soft: #fbf1dc;
+  --gold-ink: #8a5806;
+  --shadow: 0 1px 2px rgb(60 30 20 / 0.04), 0 8px 24px -12px rgb(60 30 20 / 0.12);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0c0a09;
-    --surface: #1c1917;
-    --foreground: #f5f5f4;
-    --muted: #a8a29e;
-    --border: #292524;
-    --accent: #f26d6d;
-    --accent-soft: #2a1414;
+    --background: #110d0c;
+    --surface: #1c1715;
+    --foreground: #f6efe9;
+    --muted: #ad9f97;
+    --border: #2f2724;
+    --accent: #f0636a;
+    --accent-strong: #ff8086;
+    --accent-soft: #2e1617;
+    --accent-contrast: #1a0b0c;
+    --pine: #6fd1a6;
+    --pine-soft: #12251d;
+    --gold: #f0bd5c;
+    --gold-soft: #2a2010;
+    --gold-ink: #f3c977;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.5);
   }
 }
 
@@ -29,39 +45,126 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-pine: var(--pine);
+  --color-pine-soft: var(--pine-soft);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-ink: var(--gold-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+  --shadow-soft: var(--shadow);
+
+  --animate-pop-in: pop-in 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  --animate-fade-up: fade-up 0.4s ease-out both;
+  --animate-wiggle: wiggle 2.4s ease-in-out infinite;
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wiggle {
+    0%,
+    70%,
+    100% {
+      transform: rotate(0);
+    }
+    76% {
+      transform: rotate(-8deg);
+    }
+    84% {
+      transform: rotate(7deg);
+    }
+    92% {
+      transform: rotate(-4deg);
+    }
+  }
+}
+
+html {
+  color-scheme: light dark;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(60rem 28rem at 15% -8rem, color-mix(in oklab, var(--accent) 9%, transparent), transparent 70%),
+    radial-gradient(50rem 24rem at 95% -6rem, color-mix(in oklab, var(--gold) 10%, transparent), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--foreground);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@utility btn {
+  @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium whitespace-nowrap transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100;
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-border bg-surface p-5 sm:p-6;
+    @apply rounded-2xl border border-border bg-surface p-5 shadow-soft sm:p-6;
   }
   .label {
     @apply mb-1.5 block text-sm font-medium;
   }
   .input {
-    @apply w-full rounded-lg border border-border bg-background px-3 py-2 text-base outline-none transition placeholder:text-muted/70 focus:border-foreground/40 focus:ring-2 focus:ring-foreground/10;
-  }
-  .btn {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50;
+    @apply w-full rounded-xl border border-border bg-background px-3.5 py-2.5 text-base outline-none transition placeholder:text-muted/70 focus:border-accent/50 focus:bg-surface focus:ring-4 focus:ring-accent/10;
   }
   .btn-primary {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50 bg-foreground text-background hover:opacity-90;
+    @apply btn bg-accent text-accent-contrast shadow-sm shadow-accent/20 hover:bg-accent-strong;
+  }
+  .btn-dark {
+    @apply btn bg-foreground text-background hover:opacity-90;
   }
   .btn-secondary {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50 border border-border bg-surface hover:bg-background;
+    @apply btn border border-border bg-surface hover:border-foreground/20 hover:bg-background;
   }
   .btn-ghost {
-    @apply inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition disabled:cursor-not-allowed disabled:opacity-50 px-2 text-muted hover:text-foreground;
+    @apply btn px-2.5 py-1.5 text-muted hover:bg-foreground/5 hover:text-foreground;
   }
   .eyebrow {
-    @apply text-xs font-medium tracking-widest text-muted uppercase;
+    @apply text-xs font-semibold tracking-[0.18em] text-accent uppercase;
+  }
+  .section-title {
+    @apply font-display text-xl font-semibold tracking-tight;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1 text-sm;
   }
 }

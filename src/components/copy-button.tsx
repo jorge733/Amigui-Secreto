@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckIcon, CopyIcon } from "./icons";
 
 export function CopyButton({
   text,
@@ -26,7 +27,8 @@ export function CopyButton({
 
   return (
     <button type="button" onClick={copy} className={className}>
-      {copied ? "¡Copiado!" : label}
+      {copied ? <CheckIcon size={16} className="text-pine" /> : <CopyIcon size={16} />}
+      <span aria-live="polite">{copied ? "¡Copiado!" : label}</span>
     </button>
   );
 }

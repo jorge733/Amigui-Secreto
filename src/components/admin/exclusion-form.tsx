@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { addExclusion, type ActionState } from "@/app/actions";
 import { FormMessage } from "../form-message";
+import { PlusIcon } from "../icons";
 
 type Person = { id: string; name: string };
 
@@ -30,7 +31,7 @@ export function ExclusionForm({ adminToken, people }: { adminToken: string; peop
             ))}
           </select>
         </div>
-        <span className="hidden pb-2.5 text-sm text-muted sm:block">no le regala a</span>
+        <span className="hidden pb-3 text-sm text-muted sm:block">no le regala a</span>
         <div>
           <label htmlFor="receiverId" className="label text-muted">
             <span className="sm:hidden">no le regala a</span>
@@ -50,10 +51,11 @@ export function ExclusionForm({ adminToken, people }: { adminToken: string; peop
       </div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" name="bothWays" defaultChecked className="size-4 accent-current" />
+          <input type="checkbox" name="bothWays" defaultChecked className="size-4 accent-[var(--accent)]" />
           En ambos sentidos
         </label>
         <button type="submit" disabled={pending} className="btn-secondary">
+          <PlusIcon size={16} />
           Agregar restricción
         </button>
       </div>

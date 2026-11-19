@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
 import { sendMessage, type ChatThread } from "@/app/actions";
 import type { ChatData, ChatMessage } from "@/lib/chat";
+import { ChatIcon, LockIcon, SendIcon } from "../icons";
 
 const POLL_MS = 4000;
 const MAX_LENGTH = 500;
@@ -91,13 +92,21 @@ export function ChatPanel({ token, initial }: { token: string; initial: ChatData
 
   return (
     <section className="space-y-4">
-      <div>
-        <h2 className="text-lg font-semibold">Chat anónimo</h2>
-        <p className="text-sm text-muted">Nadie más puede leer estas conversaciones, ni quien organiza.</p>
+      <div className="flex gap-3">
+        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-pine-soft text-pine">
+          <ChatIcon size={20} />
+        </span>
+        <div>
+          <h2 className="section-title">Chat anónimo</h2>
+          <p className="inline-flex items-center gap-1 text-sm text-muted">
+            <LockIcon size={13} className="shrink-0" />
+            Nadie más puede leer estas conversaciones, ni quien organiza.
+          </p>
+        </div>
       </div>
 
-      <div className="card space-y-4 p-0 sm:p-0">
-        <div role="tablist" className="grid grid-cols-2 border-b border-border text-sm">
+      <div className="card space-y-4 p-3 sm:p-3">
+        <div role="tablist" className="grid grid-cols-2 gap-1 rounded-xl bg-background p-1 text-sm">
           {(Object.keys(THREADS) as ChatThread[]).map((t) => {
             const unread = t !== active && count(t) > seen[t];
             return (
@@ -107,15 +116,14 @@ export function ChatPanel({ token, initial }: { token: string; initial: ChatData
                 type="button"
                 aria-selected={t === active}
                 onClick={() => open(t)}
-                className={`relative cursor-pointer px-4 py-3 font-medium transition ${
-                  t === active ? "text-foreground" : "text-muted hover:text-foreground"
+                className={`relative cursor-pointer rounded-lg px-3 py-2 font-medium transition ${
+                  t === active ? "bg-surface text-foreground shadow-sm" : "text-muted hover:text-foreground"
                 }`}
               >
                 {THREADS[t].tab}
                 {unread && (
                   <span className="ml-1.5 inline-block size-2 rounded-full bg-accent align-middle" aria-label="mensajes nuevos" />
                 )}
-                {t === active && <span className="absolute inset-x-4 -bottom-px h-0.5 rounded bg-foreground" />}
               </button>
             );
           })}
@@ -158,7 +166,7 @@ function Thread({
   }, [length]);
 
   if (!messages) {
-    return <p className="px-5 pb-6 text-sm text-muted sm:px-6">Esta conversación no está disponible.</p>;
+    return <p className="px-2 pb-3 text-sm text-muted">Esta conversación no está disponible.</p>;
   }
 
   function submit() {
@@ -177,26 +185,31 @@ function Thread({
   }
 
   return (
-    <div className="space-y-3 px-5 pb-5 sm:px-6 sm:pb-6">
-      <p className="text-xs text-muted">{info.hint}</p>
+    <div className="space-y-3 px-1 pb-1">
+      <p className="px-1 text-xs text-muted">{info.hint}</p>
 
       <div
         ref={listRef}
-        className="flex h-72 flex-col gap-2 overflow-y-auto rounded-xl bg-background p-3"
+        className="flex h-80 flex-col gap-2 overflow-y-auto overscroll-contain rounded-xl bg-background p-3"
         aria-live="polite"
       >
         {messages.length === 0 ? (
           <p className="m-auto max-w-xs text-center text-sm text-muted">{info.empty}</p>
         ) : (
           messages.map((m) => (
-            <div key={m.id} className={`flex max-w-[85%] flex-col ${m.mine ? "items-end self-end" : "items-start self-start"}`}>
+            <div
+              key={m.id}
+              className={`flex max-w-[85%] animate-fade-up flex-col ${m.mine ? "items-end self-end" : "items-start self-start"}`}
+            >
               <span className="mb-0.5 px-1 text-[11px] text-muted">
                 {m.mine ? "Tú" : info.them}
                 {isClient && ` · ${timeFormat.format(m.at)}`}
               </span>
               <p
                 className={`rounded-2xl px-3.5 py-2 text-sm break-words whitespace-pre-wrap ${
-                  m.mine ? "rounded-br-md bg-foreground text-background" : "rounded-bl-md border border-border bg-surface"
+                  m.mine
+                    ? "rounded-br-md bg-accent text-accent-contrast"
+                    : "rounded-bl-md border border-border bg-surface shadow-sm"
                 }`}
               >
                 {m.body}
@@ -229,10 +242,16 @@ function Thread({
             }
           }}
           placeholder={info.placeholder}
-          className="input max-h-32 min-h-10 resize-none"
+          className="input max-h-32 min-h-11 resize-none [field-sizing:content]"
         />
-        <button type="submit" disabled={pending || !draft.trim()} className="btn-primary shrink-0">
-          {pending ? "…" : "Enviar"}
+        <button
+          type="submit"
+          disabled={pending || !draft.trim()}
+          className="btn-primary size-11 shrink-0 rounded-full p-0"
+          aria-label="Enviar"
+          title="Enviar"
+        >
+          <SendIcon size={18} className={pending ? "animate-pulse" : undefined} />
         </button>
       </form>
       {error && (
