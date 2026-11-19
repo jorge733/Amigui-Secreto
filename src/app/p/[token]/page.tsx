@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { GroupSummary } from "@/components/group-summary";
 import { RevealCard } from "@/components/participant/reveal-card";
 import { WishlistForm } from "@/components/participant/wishlist-form";
+import { ChatPanel } from "@/components/participant/chat-panel";
+import { getChat } from "@/lib/chat";
 import { getParticipantView } from "@/lib/queries";
 
 export const metadata: Metadata = {
@@ -19,6 +21,7 @@ export default async function ParticipantPage({ params }: PageProps<"/p/[token]"
   if (!view) notFound();
 
   const { me, group, receiver } = view;
+  const chat = group.drawnAt ? await getChat(token) : null;
 
   return (
     <div className="space-y-10">
@@ -40,6 +43,8 @@ export default async function ParticipantPage({ params }: PageProps<"/p/[token]"
           </p>
         </div>
       )}
+
+      {chat && <ChatPanel token={token} initial={chat} />}
 
       <WishlistForm token={token} wishlist={me.wishlist} />
 

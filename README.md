@@ -12,6 +12,7 @@ App web para organizar un **amigo secreto**: sorteo justo, enlaces privados por 
 6. **Comparte** el enlace personal de cada persona (copiar o WhatsApp). Ni quien organiza sabe los resultados.
 7. Cada participante ve a quién le regala, la lista de deseos de esa persona y escribe la suya.
 8. El organizador ve quién ya abrió su resultado y puede deshacer el sorteo para editar la lista.
+9. **Chat anónimo**: cada persona puede escribirle a quien le regala sin revelar su identidad, y responderle a su propio amigo secreto. Ni quien organiza puede leer los chats; se borran si se deshace el sorteo.
 
 ## Tecnología
 
@@ -59,6 +60,7 @@ src/
     page.tsx              # inicio + crear grupo
     admin/[token]/        # panel del organizador
     p/[token]/            # página personal de cada participante
+    api/chat/[token]/     # mensajes del chat (consultados cada pocos segundos)
     actions.ts            # Server Actions (toda la lógica que escribe datos)
   components/             # UI
   db/                     # esquema y cliente de Drizzle

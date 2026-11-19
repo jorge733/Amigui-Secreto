@@ -4,10 +4,11 @@ import { and, eq, isNull, or } from "drizzle-orm";
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { db, schema } from "@/db";
+import { getChatContext, MESSAGE_MAX_LENGTH } from "@/lib/chat";
 import { drawAssignments, MIN_PARTICIPANTS } from "@/lib/draw";
 import { newId, newToken } from "@/lib/tokens";
 
-const { groups, participants, exclusions } = schema;
+const { groups, participants, exclusions, messages } = schema;
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -256,6 +257,8 @@ export async function runDraw(adminToken: string): Promise<ActionState> {
 export async function resetDraw(adminToken: string) {
   const group = await requireGroup(adminToken);
   await db.transaction(async (tx) => {
+    // Las parejas cambian al volver a sortear, así que los chats se borran.
+    await tx.delete(messages).where(eq(messages.groupId, group.id));
     await tx.update(groups).set({ drawnAt: null }).where(eq(groups.id, group.id));
     await tx
       .update(participants)
@@ -297,4 +300,38 @@ export async function markRevealed(token: string) {
       .set({ revealedAt: new Date() })
       .where(eq(participants.id, me.id));
   }
+}
+
+// ─── Chat anónimo ────────────────────────────────────────────────────────
+
+export type ChatThread = "receiver" | "giver";
+
+export async function sendMessage(
+  token: string,
+  thread: ChatThread,
+  body: string,
+): Promise<ActionState> {
+  const text = typeof body === "string" ? body.trim().slice(0, MESSAGE_MAX_LENGTH) : "";
+  if (!text) return { error: "Escribe un mensaje." };
+
+  const ctx = await getChatContext(token);
+  if (!ctx) return { error: "Enlace no válido." };
+  if (!ctx.group.drawnAt) return { error: "El chat se abre cuando se haga el sorteo." };
+
+  // "receiver": le escribo a quien le regalo (yo soy quien regala, anónimo).
+  // "giver": le escribo a quien me regala (respondo a mi amigo secreto).
+  const pair =
+    thread === "receiver"
+      ? ctx.receiverId && { giverId: ctx.me.id, receiverId: ctx.receiverId, fromGiver: true }
+      : ctx.giverId && { giverId: ctx.giverId, receiverId: ctx.me.id, fromGiver: false };
+  if (!pair) return { error: "Esta conversación no está disponible." };
+
+  await db.insert(messages).values({
+    id: newId(),
+    groupId: ctx.group.id,
+    ...pair,
+    body: text,
+    createdAt: new Date(),
+  });
+  return { ok: true };
 }

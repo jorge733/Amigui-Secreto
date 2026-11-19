@@ -162,8 +162,8 @@ function DrawnView({
       <div className="rounded-2xl bg-accent-soft p-5">
         <h2 className="text-lg font-semibold">¡Sorteo realizado!</h2>
         <p className="mt-1 text-sm text-muted">
-          Envíale a cada persona su enlace privado. Al abrirlo verá solo a quién le regala. Tú tampoco lo
-          sabes.
+          Envíale a cada persona su enlace privado. Al abrirlo verá solo a quién le regala y podrá chatear de forma anónima.
+          Tú tampoco lo sabes.
         </p>
       </div>
 
@@ -202,7 +202,7 @@ function DrawnView({
 
       <form action={resetDraw.bind(null, token)} className="pt-2 text-center">
         <ConfirmSubmit
-          message="¿Deshacer el sorteo? Las asignaciones actuales se borrarán y tendrás que sortear de nuevo. Quienes ya vieron su resultado deberán volver a revisarlo."
+          message="¿Deshacer el sorteo? Las asignaciones actuales se borrarán y tendrás que sortear de nuevo. Quienes ya vieron su resultado deberán volver a revisarlo. Los mensajes del chat también se borrarán."
           className="btn-ghost text-xs"
           pendingLabel="Deshaciendo…"
         >
